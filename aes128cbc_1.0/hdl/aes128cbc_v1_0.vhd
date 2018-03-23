@@ -7,7 +7,6 @@ entity aes128cbc_v1_0 is
 		AES_DATA_WIDTH	: integer	:= 128
 	);
 	port (
-	    new_key : in std_logic;
 	    cipher_key : in std_logic_vector(AES_DATA_WIDTH-1 downto 0);
 		-- Ports of Axi Slave Bus Interface S00_AXIS
 		s00_axis_aclk	: in std_logic;
@@ -37,17 +36,16 @@ architecture arch_imp of aes128cbc_v1_0 is
 	                READY      -- Ciphertext ready to send
 	                ); 
 	                
-    component aes128 is  
-    port (
-    Clk_CI : in std_logic;
-    Reset_RBI : in std_logic;
-    Start_SI : in std_logic;
-    NewCipherkey_SI : in std_logic;
-    Busy_SO : out std_logic;
-    Plaintext_DI  : in  std_logic_vector(127 downto 0);
-    Cipherkey_DI  : in  std_logic_vector(127 downto 0);
-    Ciphertext_DO : out std_logic_vector(127 downto 0));
-    end component aes128;
+    component aes128cbc is  
+        port (
+            Clk_CI : in std_logic;
+            Reset_RBI : in std_logic;
+            Start_SI : in std_logic;
+            Busy_SO : out std_logic;
+            Plaintext_DI  : in  std_logic_vector(127 downto 0);
+            Cipherkey_DI  : in  std_logic_vector(127 downto 0);
+            Ciphertext_DO : out std_logic_vector(127 downto 0));
+    end component aes128cbc;
     
     signal current_state : state;
     signal next_state : state;
@@ -56,15 +54,16 @@ architecture arch_imp of aes128cbc_v1_0 is
     signal start : std_logic;
     
     signal last : std_logic;
+    
+    signal plain_text : std_logic_vector(127 downto 0);
 begin
 
-encryptor: aes128 port map (
+    encryptor: aes128cbc port map (
             Clk_CI => s00_axis_aclk, 
             Reset_RBI => s00_axis_aresetn, 
             Start_SI => start,
-            NewCipherkey_SI => new_key,
             Busy_SO => busy,
-            Plaintext_DI => s00_axis_tdata,
+            Plaintext_DI => plain_text,
             Cipherkey_DI => cipher_key,
             Ciphertext_DO => m00_axis_tdata
             );
@@ -79,6 +78,7 @@ encryptor: aes128 port map (
                 last <= '0';
                 m00_axis_tlast <= '0';
             when INIT =>
+                plain_text <= s00_axis_tdata;
                 s00_axis_tready <= '1';
                 m00_axis_tvalid <= '0';
                 start <= '1';

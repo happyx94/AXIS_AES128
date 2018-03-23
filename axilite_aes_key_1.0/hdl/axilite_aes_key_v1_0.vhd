@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity aes_key_cntl_v1_0 is
+entity axilite_aes_key_v1_0 is
 	generic (
 		-- Users to add parameters here
 
@@ -12,12 +12,11 @@ entity aes_key_cntl_v1_0 is
 
 		-- Parameters of Axi Slave Bus Interface S00_AXI
 		C_S00_AXI_DATA_WIDTH	: integer	:= 32;
-		C_S00_AXI_ADDR_WIDTH	: integer	:= 5
+		C_S00_AXI_ADDR_WIDTH	: integer	:= 4
 	);
 	port (
 		-- Users to add ports here
-        aes_key_out : out std_logic_vector(127 downto 0);
-        new_key_flag : out std_logic;
+        aes128_key_out : out std_logic_vector(127 downto 0);
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -45,19 +44,18 @@ entity aes_key_cntl_v1_0 is
 		s00_axi_rvalid	: out std_logic;
 		s00_axi_rready	: in std_logic
 	);
-end aes_key_cntl_v1_0;
+end axilite_aes_key_v1_0;
 
-architecture arch_imp of aes_key_cntl_v1_0 is
+architecture arch_imp of axilite_aes_key_v1_0 is
 
 	-- component declaration
-	component aes_key_cntl_v1_0_S00_AXI is
+	component axilite_aes_key_v1_0_S00_AXI is
 		generic (
 		C_S_AXI_DATA_WIDTH	: integer	:= 32;
-		C_S_AXI_ADDR_WIDTH	: integer	:= 5
+		C_S_AXI_ADDR_WIDTH	: integer	:= 4
 		);
 		port (
-		aes_key : out std_logic_vector(127 downto 0);
-        new_key : out std_logic;
+		aes128_key : out std_logic_vector(127 downto 0);
 		S_AXI_ACLK	: in std_logic;
 		S_AXI_ARESETN	: in std_logic;
 		S_AXI_AWADDR	: in std_logic_vector(C_S_AXI_ADDR_WIDTH-1 downto 0);
@@ -80,19 +78,18 @@ architecture arch_imp of aes_key_cntl_v1_0 is
 		S_AXI_RVALID	: out std_logic;
 		S_AXI_RREADY	: in std_logic
 		);
-	end component aes_key_cntl_v1_0_S00_AXI;
+	end component axilite_aes_key_v1_0_S00_AXI;
 
 begin
 
 -- Instantiation of Axi Bus Interface S00_AXI
-aes_key_cntl_v1_0_S00_AXI_inst : aes_key_cntl_v1_0_S00_AXI
+axilite_aes_key_v1_0_S00_AXI_inst : axilite_aes_key_v1_0_S00_AXI
 	generic map (
 		C_S_AXI_DATA_WIDTH	=> C_S00_AXI_DATA_WIDTH,
 		C_S_AXI_ADDR_WIDTH	=> C_S00_AXI_ADDR_WIDTH
 	)
 	port map (
-	    aes_key => aes_key_out, 
-        new_key => new_key_flag,
+	    aes128_key => aes128_key_out,
 		S_AXI_ACLK	=> s00_axi_aclk,
 		S_AXI_ARESETN	=> s00_axi_aresetn,
 		S_AXI_AWADDR	=> s00_axi_awaddr,
@@ -117,6 +114,7 @@ aes_key_cntl_v1_0_S00_AXI_inst : aes_key_cntl_v1_0_S00_AXI
 	);
 
 	-- Add user logic here
+
 	-- User logic ends
 
 end arch_imp;

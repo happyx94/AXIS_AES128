@@ -1,27 +1,26 @@
 
-#ifndef AES_KEY_CNTL_H
-#define AES_KEY_CNTL_H
+#ifndef AXILITE_AES_KEY_H
+#define AXILITE_AES_KEY_H
 
 
 /****************** Include Files ********************/
 #include "xil_types.h"
 #include "xstatus.h"
 
-#define AES_KEY_CNTL_S00_AXI_SLV_REG0_OFFSET 0
-#define AES_KEY_CNTL_S00_AXI_SLV_REG1_OFFSET 4
-#define AES_KEY_CNTL_S00_AXI_SLV_REG2_OFFSET 8
-#define AES_KEY_CNTL_S00_AXI_SLV_REG3_OFFSET 12
-#define AES_KEY_CNTL_S00_AXI_SLV_REG4_OFFSET 16
+#define AXILITE_AES_KEY_S00_AXI_SLV_REG0_OFFSET 0
+#define AXILITE_AES_KEY_S00_AXI_SLV_REG1_OFFSET 4
+#define AXILITE_AES_KEY_S00_AXI_SLV_REG2_OFFSET 8
+#define AXILITE_AES_KEY_S00_AXI_SLV_REG3_OFFSET 12
 
 
 /**************************** Type Definitions *****************************/
 /**
  *
- * Write a value to a AES_KEY_CNTL register. A 32 bit write is performed.
+ * Write a value to a AXILITE_AES_KEY register. A 32 bit write is performed.
  * If the component is implemented in a smaller width, only the least
  * significant data is written.
  *
- * @param   BaseAddress is the base address of the AES_KEY_CNTLdevice.
+ * @param   BaseAddress is the base address of the AXILITE_AES_KEYdevice.
  * @param   RegOffset is the register offset from the base to write to.
  * @param   Data is the data written to the register.
  *
@@ -29,30 +28,30 @@
  *
  * @note
  * C-style signature:
- * 	void AES_KEY_CNTL_mWriteReg(u32 BaseAddress, unsigned RegOffset, u32 Data)
+ * 	void AXILITE_AES_KEY_mWriteReg(u32 BaseAddress, unsigned RegOffset, u32 Data)
  *
  */
-#define AES_KEY_CNTL_mWriteReg(BaseAddress, RegOffset, Data) \
+#define AXILITE_AES_KEY_mWriteReg(BaseAddress, RegOffset, Data) \
   	Xil_Out32((BaseAddress) + (RegOffset), (u32)(Data))
 
 /**
  *
- * Read a value from a AES_KEY_CNTL register. A 32 bit read is performed.
+ * Read a value from a AXILITE_AES_KEY register. A 32 bit read is performed.
  * If the component is implemented in a smaller width, only the least
  * significant data is read from the register. The most significant data
  * will be read as 0.
  *
- * @param   BaseAddress is the base address of the AES_KEY_CNTL device.
+ * @param   BaseAddress is the base address of the AXILITE_AES_KEY device.
  * @param   RegOffset is the register offset from the base to write to.
  *
  * @return  Data is the data from the register.
  *
  * @note
  * C-style signature:
- * 	u32 AES_KEY_CNTL_mReadReg(u32 BaseAddress, unsigned RegOffset)
+ * 	u32 AXILITE_AES_KEY_mReadReg(u32 BaseAddress, unsigned RegOffset)
  *
  */
-#define AES_KEY_CNTL_mReadReg(BaseAddress, RegOffset) \
+#define AXILITE_AES_KEY_mReadReg(BaseAddress, RegOffset) \
     Xil_In32((BaseAddress) + (RegOffset))
 
 /************************** Function Prototypes ****************************/
@@ -64,7 +63,7 @@
  * If the hardware system is not built correctly, this function may never
  * return to the caller.
  *
- * @param   baseaddr_p is the base address of the AES_KEY_CNTL instance to be worked on.
+ * @param   baseaddr_p is the base address of the AXILITE_AES_KEY instance to be worked on.
  *
  * @return
  *
@@ -75,6 +74,6 @@
  * @note    Self test may fail if data memory and device are not on the same bus.
  *
  */
-XStatus AES_KEY_CNTL_Reg_SelfTest(void * baseaddr_p);
+XStatus AXILITE_AES_KEY_Reg_SelfTest(void * baseaddr_p);
 
-#endif // AES_KEY_CNTL_H
+#endif // AXILITE_AES_KEY_H

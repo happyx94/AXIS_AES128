@@ -1,6 +1,6 @@
 
 
 /***************************** Include Files *******************************/
-#include "aes_key_cntl.h"
+#include "axilite_aes_key.h"
 
 /************************** Function Definitions ***************************/
