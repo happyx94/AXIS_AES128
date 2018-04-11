@@ -8,6 +8,7 @@ entity axis_aes128_v1_0 is
 	);
 	port (
 	    cipher_key : in std_logic_vector(AES_DATA_WIDTH-1 downto 0);
+	    set_IV : in std_logic;
 		-- Ports of Axi Slave Bus Interface S00_AXIS
 		s00_axis_aclk	: in std_logic;
 		s00_axis_aresetn	: in std_logic;
@@ -40,6 +41,7 @@ architecture arch_imp of axis_aes128_v1_0 is
         port (
             Clk_CI : in std_logic;
             Reset_RBI : in std_logic;
+            Set_IV : in std_logic;
             Start_SI : in std_logic;
             Busy_SO : out std_logic;
             Plaintext_DI  : in  std_logic_vector(127 downto 0);
@@ -61,6 +63,7 @@ begin
     encryptor: aes128cbc port map (
             Clk_CI => s00_axis_aclk, 
             Reset_RBI => s00_axis_aresetn, 
+            Set_IV => set_IV,
             Start_SI => start,
             Busy_SO => busy,
             Plaintext_DI => plain_text,

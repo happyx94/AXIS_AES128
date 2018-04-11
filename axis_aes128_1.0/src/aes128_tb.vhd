@@ -39,12 +39,14 @@ architecture Behavioral of aes128_tb is
 
 	signal end_sim : boolean := false;
 	constant period : time := 1us;
-    component aes128cbc_v1_0 is  
+    component axis_aes128_v1_0 is  
         generic (
             AES_DATA_WIDTH    : integer    := 128
         );
         port (
             cipher_key : in std_logic_vector(AES_DATA_WIDTH-1 downto 0);
+            
+            set_IV : in std_logic;
             -- Ports of Axi Slave Bus Interface S00_AXIS
             s00_axis_aclk    : in std_logic;
             s00_axis_aresetn    : in std_logic;
@@ -63,13 +65,14 @@ architecture Behavioral of aes128_tb is
             m00_axis_tlast    : out std_logic;
             m00_axis_tready    : in std_logic
         );
-    end component aes128cbc_v1_0;
+    end component axis_aes128_v1_0;
 
 
 signal rst_bar : std_logic;
 signal clk : std_logic := '0';
 
 signal cipher_key_tb : std_logic_vector(127 downto 0);
+signal set_IV_tb : std_logic;
 
 -- Axi Slave Bus Interface S00_AXIS
 signal s00_axis_tready_tb   : std_logic;
@@ -86,8 +89,9 @@ signal m00_axis_tlast_tb    : std_logic;
 signal m00_axis_tready_tb   : std_logic;
 
 begin
-uut: aes128cbc_v1_0 port map (
+uut: axis_aes128_v1_0 port map (
             cipher_key => cipher_key_tb,
+            set_IV => set_IV_tb,
             -- Ports of Axi Slave Bus Interface S00_AXIS
             s00_axis_aclk => clk,
             s00_axis_aresetn => rst_bar,
@@ -111,8 +115,14 @@ stim: process
     begin
         rst_bar <= '0';
         m00_axis_tready_tb <= '0';
+        set_IV_tb <= '0';
         wait for period;
-        rst_bar <= '1';        
+        rst_bar <= '1';  
+        cipher_key_tb <= x"00000000000000000000000000000001";
+        set_IV_tb <= '1';
+        wait for period * 2;
+        set_IV_tb <= '0';
+        wait for period;
         cipher_key_tb <= x"5468617473206D79204B756E67204675"; --x"000102030405060708090a0b0c0d0e0f";
         wait for period;
         s00_axis_tlast_tb <= '0';

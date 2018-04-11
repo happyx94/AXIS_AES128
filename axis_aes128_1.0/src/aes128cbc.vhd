@@ -54,6 +54,8 @@ entity aes128cbc is
     --! @brief Synchronous, active-high reset.
     Reset_RBI : in std_logic;
 
+    Set_IV : in std_logic;
+
     --! @brief Starts the actual encryption process.
     --! <TABLE BORDER="0">
     --! <TR><TD>0</TD><TD>...</TD><TD>Do not start the encryption.</TD></TR>
@@ -206,7 +208,11 @@ begin  -- architecture Behavioral
         if Reset_RBI = '0' then
             Ciphertext_DP <= conv_matrix((others => '0'));
         elsif rising_edge(Clk_CI) then
-            if n_round_next = 1 then
+            if n_round_next = 0 then
+               if Set_IV = '1' then
+                   Ciphertext_DP <= conv_matrix(Cipherkey_DI);
+               end if;
+            elsif n_round_next = 1 then
                CipherState_DP <= conv_matrix(Cipherkey_DI xor (Plaintext_DI xor conv_std_logic_vector(Ciphertext_DP)));
                Roundkey_DP <= Roundkey_DN;
             elsif n_round_next > 1 and n_round_next < 10 then
