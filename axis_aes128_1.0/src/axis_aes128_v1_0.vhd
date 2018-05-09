@@ -1,3 +1,12 @@
+----------------------------------------------------------------------------------
+-- Author: Hsiang-Ju Lai
+-- 
+-- Create Date: 03/22/2018
+-- Project Name: axis_aes128
+-- Target Devices: Zynq-7Z007S
+-- 
+----------------------------------------------------------------------------------
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -58,6 +67,7 @@ architecture arch_imp of axis_aes128_v1_0 is
     signal last : std_logic;
     
     signal plain_text : std_logic_vector(127 downto 0);
+    signal cipher_text : std_logic_vector(127 downto 0);
 begin
 
     encryptor: aes128cbc port map (
@@ -68,16 +78,24 @@ begin
             Busy_SO => busy,
             Plaintext_DI => plain_text,
             Cipherkey_DI => cipher_key,
-            Ciphertext_DO => m00_axis_tdata
+            Ciphertext_DO => cipher_text
             );
-
+            
+    comb_data_out: process(cipher_text)
+    begin
+        for i in 0 to 15 loop
+            m00_axis_tdata(127 - 8*i downto 120 - 8*i) <= cipher_text(7 + 8*i downto 8*i);
+        end loop;
+    end process;
 
     seq_regs: process(s00_axis_aclk)
     begin
         if rising_edge(s00_axis_aclk) then
             if next_state = INIT then
                 last <= s00_axis_tlast;
-                plain_text <= s00_axis_tdata;
+                for i in 0 to 15 loop
+                    plain_text(127 - 8*i downto 120 - 8*i) <= s00_axis_tdata(7 + 8*i downto 8*i);
+                end loop;
             end if;
         end if;
     end process;

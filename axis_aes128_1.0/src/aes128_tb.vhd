@@ -120,14 +120,16 @@ stim: process
         rst_bar <= '1';  
         cipher_key_tb <= x"00000000000000000000000000000001";
         set_IV_tb <= '1';
+        -- Set IV to x"00000000000000000000000000000001"
         wait for period * 2;
         set_IV_tb <= '0';
         wait for period;
-        cipher_key_tb <= x"5468617473206D79204B756E67204675"; --x"000102030405060708090a0b0c0d0e0f";
+        cipher_key_tb <= x"5468617473206D79204B756E67204675"; 
+        -- Expected output: BA10411B0629520D29C65348198AA1DD
         wait for period;
         s00_axis_tlast_tb <= '0';
         s00_axis_tvalid_tb <= '1';
-        s00_axis_tdata_tb <= x"54776F204F6E65204E696E652054776F"; -- x"00112233445566778899aabbccddeeff";
+        s00_axis_tdata_tb <= x"54776F204F6E65204E696E652054776F"; 
         if s00_axis_tready_tb = '0' then
             wait on s00_axis_tready_tb until s00_axis_tready_tb = '1';
         end if;
@@ -135,6 +137,7 @@ stim: process
         s00_axis_tlast_tb <= '0';
         s00_axis_tvalid_tb <= '0';
         s00_axis_tdata_tb <= x"ccdd5533445566778899aabbccddeeff";
+        -- Expected output: 30EF5A354ABE1CC927872A3D892F8567
         wait on m00_axis_tvalid_tb until m00_axis_tvalid_tb = '1';
         m00_axis_tready_tb <= '1';
         s00_axis_tvalid_tb <= '1';

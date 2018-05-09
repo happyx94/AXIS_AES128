@@ -1,23 +1,18 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Stony Brook University 
+-- Engineer: Hsiang-Ju Lai
 -- 
 -- Create Date: 03/22/2018 08:33:18 PM
--- Design Name: 
 -- Module Name: keyGeneration - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
+-- Project Name: axis_aes128
+-- Target Devices: Zynq-7Z007S
 -- 
 -- Revision:
 -- Revision 0.01 - File Created
--- Additional Comments:
+-- Additional Comments: This is a modified version of Michael Muehlberghuber's
+--                      KeyExpansion entity.
 -- 
 ----------------------------------------------------------------------------------
-
 
 library ieee;
 use ieee.std_logic_1164.all;
